@@ -5,7 +5,11 @@ const eventHubTrigger: AzureFunction = async function (context: Context, eventHu
     
     eventHubMessages.forEach((message, index) => {
         context.log(`Processed message ${message}`);
+
+        context.bindings.outputEventHubMessage.push(message);
     });
+
+    context.done();
 };
 
 export default eventHubTrigger;

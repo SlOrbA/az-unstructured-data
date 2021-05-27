@@ -4,7 +4,7 @@
       "type": "eventHubTrigger",
       "name": "inputEventHubMessages",
       "direction": "in",
-      "eventHubName": "samples-workitems",
+      "eventHubName": "first",
       "connection": "FIRST_EVENT_HUB_CONNECTION",
       "cardinality": "many",
       "consumerGroup": "$Default"
@@ -12,6 +12,7 @@
     {
       "type": "eventHub",
       "name": "outputEventHubMessage",
+      "eventHubName": "second",
       "connection": "SECOND_EVENT_HUB_CONNECTION",
       "direction": "out"
     }
