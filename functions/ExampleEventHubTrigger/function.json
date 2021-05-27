@@ -1,0 +1,14 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "eventHubMessages",
+      "direction": "in",
+      "eventHubName": "samples-workitems",
+      "connection": "ENDPOINT_EVENT_HUB_CONNECTION",
+      "cardinality": "many",
+      "consumerGroup": "$Default"
+    }
+  ],
+  "scriptFile": "../dist/ExampleEventHubTrigger/index.js"
+}
