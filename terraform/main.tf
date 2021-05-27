@@ -56,12 +56,32 @@ resource "azurerm_eventhub" "first" {
   message_retention   = 1
 }
 
+resource "azurerm_eventhub_authorization_rule" "first" {
+  name                = "first"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  eventhub_name       = azurerm_eventhub.endpoint.name
+  resource_group_name = azurerm_resource_group.example.name
+  listen              = true
+  send                = false
+  manage              = false
+}
+
 resource "azurerm_eventhub" "second" {
   name                = "second"
   namespace_name      = azurerm_eventhub_namespace.example.name
   resource_group_name = azurerm_resource_group.example.name
   partition_count     = 2
   message_retention   = 1
+}
+
+resource "azurerm_eventhub_authorization_rule" "second" {
+  name                = "second"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  eventhub_name       = azurerm_eventhub.endpoint.name
+  resource_group_name = azurerm_resource_group.example.name
+  listen              = true
+  send                = false
+  manage              = false
 }
 
 resource "azurerm_storage_account" "example" {
@@ -105,6 +125,8 @@ resource "azurerm_function_app" "example" {
   app_settings = {
       "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
       "ENDPOINT_EVENT_HUB_CONNECTION"= azurerm_eventhub_authorization_rule.endpoint.primary_connection_string
+      "FIRST_EVENT_HUB_CONNECTION"= azurerm_eventhub_authorization_rule.first.primary_connection_string
+      "SECOND_EVENT_HUB_CONNECTION"= azurerm_eventhub_authorization_rule.second.primary_connection_string
   }
 
   tags = var.tags

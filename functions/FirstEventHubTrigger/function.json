@@ -8,7 +8,13 @@
       "connection": "ENDPOINT_EVENT_HUB_CONNECTION",
       "cardinality": "many",
       "consumerGroup": "$Default"
+    },
+    {
+      "type": "eventHub",
+      "name": "outputEventHubMessage",
+      "connection": "FIRST_EVENT_HUB_CONNECTION",
+      "direction": "out"
     }
   ],
-  "scriptFile": "../dist/ExampleEventHubTrigger/index.js"
+  "scriptFile": "../dist/FirstEventHubTrigger/index.js"
 }
