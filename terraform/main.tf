@@ -109,8 +109,8 @@ resource "azurerm_app_service_plan" "example" {
   resource_group_name = azurerm_resource_group.example.name
 
   sku {
-    tier = "Standard"
-    size = "S1"
+    tier = "Shared"
+    size = "D1"
   }
 
   tags = var.tags
@@ -133,6 +133,7 @@ resource "azurerm_function_app" "example" {
   version                    = "~3"
 
   app_settings = {
+    "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
     "WEBSITE_RUN_FROM_PACKAGE"       = "1"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
     "ENDPOINT_EVENT_HUB_CONNECTION"  = azurerm_eventhub_authorization_rule.endpoint.primary_connection_string
