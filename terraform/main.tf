@@ -133,8 +133,9 @@ resource "azurerm_function_app" "example" {
   version                    = "~3"
 
   app_settings = {
-    "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
     "WEBSITE_RUN_FROM_PACKAGE"       = "1"
+    "FUNCTIONS_WORKER_RUNTIME"       = "node"
+    "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
     "ENDPOINT_EVENT_HUB_CONNECTION"  = azurerm_eventhub_authorization_rule.endpoint.primary_connection_string
     "FIRST_EVENT_HUB_CONNECTION"     = azurerm_eventhub_authorization_rule.first.primary_connection_string

@@ -17,11 +17,16 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
     {
         context.log('Timer function is running late!');
     }
-    if (!sendingDisabled) {
-        context.bindings.outputEventHubMessage.push(message);
-        context.log('Message sent!');
-    } else {
+    if (sendingDisabled) {
         context.log('Message sending disabled!');
+    } else {
+        if (context.bindings.outputEventHubMessage) {
+            context.bindings.outputEventHubMessage.push(message);
+        } else {
+            context.log('Bindings are not ok!');
+            context.log('context.bindings: ' + JSON.stringify(context.bindings));
+        }
+        context.log('Message sent!');
     }
     context.log('Timer trigger function ran!', timeStamp);
 };
