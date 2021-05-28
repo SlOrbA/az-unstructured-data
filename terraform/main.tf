@@ -69,7 +69,7 @@ resource "azurerm_eventhub" "first" {
 resource "azurerm_eventhub_authorization_rule" "first" {
   name                = "first"
   namespace_name      = azurerm_eventhub_namespace.example.name
-  eventhub_name       = azurerm_eventhub.endpoint.name
+  eventhub_name       = azurerm_eventhub.first.name
   resource_group_name = azurerm_resource_group.example.name
   listen              = true
   send                = true
@@ -87,7 +87,7 @@ resource "azurerm_eventhub" "second" {
 resource "azurerm_eventhub_authorization_rule" "second" {
   name                = "second"
   namespace_name      = azurerm_eventhub_namespace.example.name
-  eventhub_name       = azurerm_eventhub.endpoint.name
+  eventhub_name       = azurerm_eventhub.first.name
   resource_group_name = azurerm_resource_group.example.name
   listen              = false
   send                = true
@@ -134,7 +134,6 @@ resource "azurerm_function_app" "example" {
 
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE"       = "1"
-    "FUNCTIONS_WORKER_RUNTIME"       = "node"
     "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
     "ENDPOINT_EVENT_HUB_CONNECTION"  = azurerm_eventhub_authorization_rule.endpoint.primary_connection_string
