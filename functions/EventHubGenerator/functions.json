@@ -1,0 +1,18 @@
+{
+  "bindings": [
+    {
+      "name": "myTimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 */5 * * * *"
+    },
+    {
+      "type": "eventHub",
+      "name": "outputEventHubMessage",
+      "eventHubName": "endpoint",
+      "connection": "GENERATOR_EVENT_HUB_CONNECTION",
+      "direction": "out"
+    }
+  ],
+  "scriptFile": "../dist/EventHubGenerator/index.js"
+}

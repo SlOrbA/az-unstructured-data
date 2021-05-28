@@ -38,6 +38,16 @@ resource "azurerm_eventhub" "endpoint" {
   message_retention   = 1
 }
 
+resource "azurerm_eventhub_authorization_rule" "input" {
+  name                = "input"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  eventhub_name       = azurerm_eventhub.endpoint.name
+  resource_group_name = azurerm_resource_group.example.name
+  listen              = false
+  send                = true
+  manage              = false
+}
+
 resource "azurerm_eventhub_authorization_rule" "endpoint" {
   name                = "endpoint"
   namespace_name      = azurerm_eventhub_namespace.example.name
@@ -123,10 +133,12 @@ resource "azurerm_function_app" "example" {
   version                    = "~3"
 
   app_settings = {
+    "WEBSITE_RUN_FROM_PACKAGE"       = "1"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
     "ENDPOINT_EVENT_HUB_CONNECTION"  = azurerm_eventhub_authorization_rule.endpoint.primary_connection_string
     "FIRST_EVENT_HUB_CONNECTION"     = azurerm_eventhub_authorization_rule.first.primary_connection_string
     "SECOND_EVENT_HUB_CONNECTION"    = azurerm_eventhub_authorization_rule.second.primary_connection_string
+    "GENERATOR_EVENT_HUB_CONNECTION" = azurerm_eventhub_authorization_rule.input.primary_connection_string
   }
 
   tags = var.tags
