@@ -107,10 +107,12 @@ resource "azurerm_app_service_plan" "example" {
   name                = "azure-functions-test-service-plan-${random_integer.postfix.result}"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
+  kind                = "Linux"
+  reserved            = true
 
   sku {
-    tier = "Shared"
-    size = "D1"
+    tier = "Basic"
+    size = "B1"
   }
 
   tags = var.tags
@@ -130,11 +132,13 @@ resource "azurerm_function_app" "example" {
   app_service_plan_id        = azurerm_app_service_plan.example.id
   storage_account_name       = azurerm_storage_account.example.name
   storage_account_access_key = azurerm_storage_account.example.primary_access_key
+  os_type                    = "linux"
   version                    = "~3"
 
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE"       = "1"
     "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
+    "FUNCTIONS_WORKER_RUNTIME"       = "node"
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
     "ENDPOINT_EVENT_HUB_CONNECTION"  = azurerm_eventhub_authorization_rule.endpoint.primary_connection_string
     "FIRST_EVENT_HUB_CONNECTION"     = azurerm_eventhub_authorization_rule.first.primary_connection_string
