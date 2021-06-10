@@ -5,15 +5,6 @@
       "type": "timerTrigger",
       "direction": "in",
       "schedule": "0 * * * * *"
-    },
-    {
-      "type": "eventHub",
-      "direction": "out",
-      "name": "outputEventHubMessage",
-      "eventHubName": "endpoint",
-      "connection": "GENERATOR_EVENT_HUB_CONNECTION",
-      "cardinality": "many",
-      "consumerGroup": "$Default"
     }
   ],
   "scriptFile": "../dist/EventHubGenerator/index.js"

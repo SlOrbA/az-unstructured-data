@@ -17,6 +17,9 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
+    "@azure/event-hubs": "^5.5.1",
+    "@azure/eventhubs-checkpointstore-blob": "^1.0.1",
+    "@azure/storage-blob": "^12.6.0",
     "@types/node": "^15.6.1"
   }
 }
