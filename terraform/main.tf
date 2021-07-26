@@ -1,12 +1,12 @@
-variable "tags" { 
-    default = {
-        deployer = "first.last@email.net"
-        example  = "example" 
-    }
+variable "tags" {
+  default = {
+    deployer = "first.last@email.net"
+    example  = "example"
+  }
 }
 
 provider "azurerm" {
-    features {}
+  features {}
 }
 
 resource "random_integer" "postfix" {
@@ -17,7 +17,7 @@ resource "random_integer" "postfix" {
 resource "azurerm_resource_group" "example" {
   name     = "example-${random_integer.postfix.result}"
   location = "West Europe"
-  tags = var.tags
+  tags     = var.tags
 }
 
 resource "azurerm_eventhub_namespace" "example" {
@@ -100,7 +100,7 @@ resource "azurerm_storage_account" "example" {
   location                 = azurerm_resource_group.example.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  tags = var.tags
+  tags                     = var.tags
 }
 
 resource "azurerm_app_service_plan" "example" {
@@ -150,8 +150,8 @@ resource "azurerm_function_app" "example" {
 }
 
 resource "null_resource" "example-functions" {
-    provisioner "local-exec" {
-        working_dir = "../functions"
-        command     = "yarn build;func azure functionapp publish ${azurerm_function_app.example.name}"
+  provisioner "local-exec" {
+    working_dir = "../functions"
+    command     = "yarn build;func azure functionapp publish ${azurerm_function_app.example.name}"
   }
 }
