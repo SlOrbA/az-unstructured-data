@@ -8,6 +8,13 @@
       "connection": "FIRST_EVENT_HUB_CONNECTION",
       "cardinality": "many",
       "consumerGroup": "$Default"
+    },
+    {
+      "type": "eventHub",
+      "name": "outputEventHubMessage",
+      "direction": "out",
+      "eventHubName": "second",
+      "connection": "SECOND_EVENT_HUB_CONNECTION"
     }
   ],
   "scriptFile": "../dist/SecondEventHubTrigger/index.js"

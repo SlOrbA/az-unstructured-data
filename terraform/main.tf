@@ -87,7 +87,7 @@ resource "azurerm_eventhub" "second" {
 resource "azurerm_eventhub_authorization_rule" "second" {
   name                = "second"
   namespace_name      = azurerm_eventhub_namespace.example.name
-  eventhub_name       = azurerm_eventhub.first.name
+  eventhub_name       = azurerm_eventhub.second.name
   resource_group_name = azurerm_resource_group.example.name
   listen              = false
   send                = true
@@ -103,17 +103,12 @@ resource "azurerm_storage_account" "example" {
   tags                     = var.tags
 }
 
-resource "azurerm_app_service_plan" "example" {
+resource "azurerm_service_plan" "example" {
   name                = "azure-functions-test-service-plan-${random_integer.postfix.result}"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
-  kind                = "Linux"
-  reserved            = true
-
-  sku {
-    tier = "Basic"
-    size = "B1"
-  }
+  os_type             = "Linux"
+  sku_name            = "B1"
 
   tags = var.tags
 }
@@ -125,21 +120,25 @@ resource "azurerm_application_insights" "example" {
   application_type    = "web"
 }
 
-resource "azurerm_function_app" "example" {
-  name                       = "example-functions-${random_integer.postfix.result}"
-  location                   = azurerm_resource_group.example.location
-  resource_group_name        = azurerm_resource_group.example.name
-  app_service_plan_id        = azurerm_app_service_plan.example.id
-  storage_account_name       = azurerm_storage_account.example.name
-  storage_account_access_key = azurerm_storage_account.example.primary_access_key
-  os_type                    = "linux"
-  version                    = "~3"
+resource "azurerm_linux_function_app" "example" {
+  name                        = "example-functions-${random_integer.postfix.result}"
+  location                    = azurerm_resource_group.example.location
+  resource_group_name         = azurerm_resource_group.example.name
+  service_plan_id             = azurerm_service_plan.example.id
+  storage_account_name        = azurerm_storage_account.example.name
+  storage_account_access_key  = azurerm_storage_account.example.primary_access_key
+  functions_extension_version = "~4"
+
+  site_config {
+    application_insights_connection_string = azurerm_application_insights.example.connection_string
+    application_stack {
+      node_version = "20"
+    }
+  }
 
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE"       = "1"
-    "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
     "FUNCTIONS_WORKER_RUNTIME"       = "node"
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
     "ENDPOINT_EVENT_HUB_CONNECTION"  = azurerm_eventhub_authorization_rule.endpoint.primary_connection_string
     "FIRST_EVENT_HUB_CONNECTION"     = azurerm_eventhub_authorization_rule.first.primary_connection_string
     "SECOND_EVENT_HUB_CONNECTION"    = azurerm_eventhub_authorization_rule.second.primary_connection_string
@@ -152,6 +151,6 @@ resource "azurerm_function_app" "example" {
 resource "null_resource" "example-functions" {
   provisioner "local-exec" {
     working_dir = "../functions"
-    command     = "yarn build;func azure functionapp publish ${azurerm_function_app.example.name}"
+    command     = "yarn build;func azure functionapp publish ${azurerm_linux_function_app.example.name}"
   }
 }
