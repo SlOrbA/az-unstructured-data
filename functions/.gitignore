@@ -41,3 +41,9 @@ venv.bak/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Yarn Berry
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
